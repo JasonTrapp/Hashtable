@@ -16,6 +16,18 @@ struct hashtable_t{
 	size_t size;
 };
 
+/**
+* Creates a hashtable with size buckets.
+*/
+struct hashtable_t *make_hashtable(unsigned long size){
+	struct hashtable_t *tab;
+	tab->size = size;
+	return tab;
+}
+
+
+
+
 int main(int argc, char* argv[]){
 	
 	return 0;
