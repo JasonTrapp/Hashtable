@@ -29,17 +29,29 @@ struct hashtable_t *make_hashtable(unsigned long size){
 * Inserts the key => val mapping, or updates the value for key, if it is already in the hashtable.
 */
 void insert(struct hashtable_t *ht, char *key, void *val){
-	hashtable newHT = (hashtable) malloc(ht->size * sizeof(hashtable));
 	item newItem = (item) malloc(ht->size * sizeof(item));
 	char* data = val;
 	
 	newItem->key = key;
 	newItem->value = (int) *data;
+	ht->item = (item **) newItem;
 }
 
+void printHash(struct hashtable_t *ht){
+	if(ht->item == NULL){
+		printf("No items found");
+		return;
+	}
+	item newItem = (item) ht->item;
+	while(newItem != NULL){
+		printf("key = %s, value = %d\n", newItem->key, newItem->value);
+		newItem = (item)newItem->next;
+	}
+}
 
 int main(int argc, char* argv[]){
 	struct hashtable_t *hash = make_hashtable(1);
 	insert(hash, "one", "two");
+	printHash(hash);
 	return 0;
 }
