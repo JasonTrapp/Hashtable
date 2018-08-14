@@ -1,15 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 
-typedef struct item_t* item;
+typedef struct item_t item;
 
 struct item_t{
     char *key;
-    int value;
+    char *value;
     item *next;
 };
 
-typedef struct hashtable_t* hashtable;
+typedef struct hashtable_t hashtable;
 
 struct hashtable_t{
     item **item;
@@ -17,41 +19,23 @@ struct hashtable_t{
 };
 
 /**
-* Creates a hashtable with size buckets.
+* Creates a hashtable with specified number of buckets
+* Return: true if memory is allocated otherwise return false
 */
-struct hashtable_t *make_hashtable(unsigned long size){
-	hashtable tab = (hashtable ) malloc(size * sizeof(struct hashtable_t));
-	tab->size = size;
-	return tab;
+bool make_hashtable(hashtable *ht, unsigned long size){
+	ht->size = size;
+	ht->item = (item**) calloc(ht->size, sizeof(item));
+	return ht->item != 0;
 }
 
-/**
-* Inserts the key => val mapping, or updates the value for key, if it is already in the hashtable.
-*/
-void insert(struct hashtable_t *ht, char *key, void *val){
-	item newItem = (item) malloc(ht->size * sizeof(item));
-	char* data = val;
-	
-	newItem->key = key;
-	newItem->value = (int) *data;
-	ht->item = (item **) newItem;
-}
-
-void printHash(struct hashtable_t *ht){
-	if(ht->item == NULL){
-		printf("No items found");
-		return;
-	}
-	item newItem = (item) ht->item;
-	while(newItem != NULL){
-		printf("key = %s, value = %d\n", newItem->key, newItem->value);
-		newItem = (item)newItem->next;
-	}
-}
 
 int main(int argc, char* argv[]){
-	struct hashtable_t *hash = make_hashtable(1);
-	insert(hash, "one", "two");
-	printHash(hash);
+	hashtable ht;
+	if(!(make_hashtable(&ht, 10))){
+		printf("Hashtable was unable to be created.\n");
+		exit(EXIT_FAILURE);
+	}
+	
+
 	return 0;
 }
