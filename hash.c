@@ -28,6 +28,22 @@ bool make_hashtable(hashtable *ht, unsigned long size){
 	return ht->item != 0;
 }
 
+/**
+* Inserts the key => val mapping, or updates the value for key, if it is already in the hashtable.
+*/
+void insert(hashtable *ht, char *key, void *val){
+	item* temp = (item *) malloc(sizeof(item));
+	if(temp == NULL){
+		printf("Make hashtable larger before adding more items.");
+		return;
+	}	
+
+	temp->key = key;
+	temp->value = (char*) val;
+}
+
+
+
 
 int main(int argc, char* argv[]){
 	hashtable ht;
@@ -36,6 +52,7 @@ int main(int argc, char* argv[]){
 		exit(EXIT_FAILURE);
 	}
 	
+	insert(&ht, "test", "test1");
 
 	return 0;
 }
