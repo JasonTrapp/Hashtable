@@ -19,6 +19,22 @@ struct hashtable_t{
 };
 
 /**
+* Bernstein hash function
+* Param: 
+*		char* values
+* Return: The hash of input
+*/
+size_t hashBern(char* string, hashtable *ht){
+	size_t hash = 2357;
+	int i;
+	while((i = *string++) != '\0'){
+		hash = ((hash << 5) + hash) + i;
+	}
+
+	return hash % ht->size;
+}
+
+/**
 * Creates a hashtable with specified number of buckets
 * Return: true if memory is allocated otherwise return false
 */
@@ -40,6 +56,10 @@ void insert(hashtable *ht, char *key, void *val){
 
 	temp->key = key;
 	temp->value = (char*) val;
+
+	size_t bucket = hashBern(val, ht);
+	temp->next = ht->item[bucket];
+	ht->item[bucket] = temp;
 }
 
 
@@ -53,6 +73,6 @@ int main(int argc, char* argv[]){
 	}
 	
 	insert(&ht, "test", "test1");
-
+	
 	return 0;
 }
