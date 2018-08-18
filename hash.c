@@ -7,7 +7,7 @@ typedef struct item_t item;
 
 struct item_t{
     char *key;
-    char *value;
+    int value;
     item *next;
 };
 
@@ -47,7 +47,7 @@ bool make_hashtable(hashtable *ht, unsigned long size){
 /**
 * Inserts the key => val mapping, or updates the value for key, if it is already in the hashtable.
 */
-void insert(hashtable *ht, char *key, void *val){
+void insert(hashtable *ht, char *key, int val){
 	item* temp = (item *) malloc(sizeof(item));
 	if(temp == NULL){
 		printf("Make hashtable larger before adding more items.");
@@ -55,14 +55,31 @@ void insert(hashtable *ht, char *key, void *val){
 	}	
 
 	temp->key = key;
-	temp->value = (char*) val;
+	temp->value =  val;
 
-	size_t bucket = hashBern(val, ht);
+	size_t bucket = hashBern(key, ht);
 	temp->next = ht->item[bucket];
 	ht->item[bucket] = temp;
 }
 
 
+void printTable(hashtable *ht){
+	printf("Printing hashtable with size %ld\n", ht->size);
+	for(int i=0; i < ht->size; i++){
+		if(ht->item[i] == NULL){
+			printf("Empty position.\n");
+		}
+		else{
+			for(item *it = ht->item[i]; it != NULL; it = it->next){
+				printf("key=%s, value=%d \n", it->key, it->value);
+				if(it->next != NULL)
+					printf(" -> ");
+			}
+		}	
+	}
+	printf("\n");
+	return;
+}
 
 
 int main(int argc, char* argv[]){
@@ -72,7 +89,14 @@ int main(int argc, char* argv[]){
 		exit(EXIT_FAILURE);
 	}
 	
-	insert(&ht, "test", "test1");
-	
+	//insert(&ht, "Australia", "test");
+	insert(&ht, "You're", 4);
+	insert(&ht, "tearing", 2);
+	insert(&ht, "me", 1);
+	insert(&ht, "apart", 5);
+	insert(&ht, "Lisa", 1);
+
+	printTable(&ht);	
+
 	return 0;
 }
