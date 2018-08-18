@@ -62,6 +62,34 @@ void insert(hashtable *ht, char *key, int val){
 	ht->item[bucket] = temp;
 }
 
+item* getIndex(hashtable *ht, char* key){
+	return ht->item[hashBern(key, ht)];
+}
+
+/**
+* Removes the mapping for key
+*/
+void del(hashtable *ht, char *key){
+	item *head =  getIndex(ht, key);
+	item *current = head;
+	item *prev = NULL;
+	while(current != NULL){
+		if(strcmp(key, current->key) == 0){
+			if(prev == NULL){
+				ht->item[hashBern(key, ht)] = current->next;
+			}
+			else{
+				prev->next = current->next;
+			}
+			
+			free(current);
+			break;
+		}
+		prev = current;
+		current = current->next;
+		
+	}
+}
 
 void printTable(hashtable *ht){
 	printf("Printing hashtable with size %ld\n", ht->size);
@@ -89,13 +117,19 @@ int main(int argc, char* argv[]){
 		exit(EXIT_FAILURE);
 	}
 	
-	//insert(&ht, "Australia", "test");
 	insert(&ht, "You're", 4);
 	insert(&ht, "tearing", 2);
 	insert(&ht, "me", 1);
 	insert(&ht, "apart", 5);
 	insert(&ht, "Lisa", 1);
+	insert(&ht, "Hello", 4);
+	insert(&ht, "doggy", 2);
+	insert(&ht, "favourite", 1);
+	insert(&ht, "customer", 5);
+	insert(&ht, "Mark", 1);
 
+	printTable(&ht);	
+	del(&ht, "Lisa");
 	printTable(&ht);	
 
 	return 0;
