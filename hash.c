@@ -91,8 +91,28 @@ void del(hashtable *ht, char *key){
 	}
 }
 
+void destroyHash(hashtable *ht){
+	for(int i = 0; i < ht->size; i++){
+		item* temp = ht->item[i];
+		while(temp != NULL){
+			item* curr = temp->next;
+			free(temp);
+			temp = NULL;
+		}
+	}	
+	
+	free(ht->item);
+	ht->item = NULL;
+	ht->size = 0;
+}
+
 void printTable(hashtable *ht){
-	printf("Printing hashtable with size %ld\n", ht->size);
+	if(ht->size == 0){
+		printf("Hashtable must have a size greater than zero.");
+		return;
+	}
+	
+	printf("Printing hashtable with size %ld\n", ht->size);	
 	for(int i=0; i < ht->size; i++){
 		if(ht->item[i] == NULL){
 			printf("Empty position.\n");
@@ -132,5 +152,7 @@ int main(int argc, char* argv[]){
 	del(&ht, "Lisa");
 	printTable(&ht);	
 
+	destroyHash(&ht);
+	printTable(&ht);	
 	return 0;
 }
