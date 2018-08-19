@@ -24,7 +24,7 @@ struct hashtable_t{
 *		char* values
 * Return: The hash of input
 */
-size_t hashBern(char* string, hashtable *ht){
+size_t hashBern(hashtable *ht, char* string){
 	size_t hash = 2357;
 	int i;
 	while((i = *string++) != '\0'){
@@ -57,13 +57,13 @@ void insert(hashtable *ht, char *key, int val){
 	temp->key = key;
 	temp->value =  val;
 
-	size_t bucket = hashBern(key, ht);
+	size_t bucket = hashBern(ht, key);
 	temp->next = ht->item[bucket];
 	ht->item[bucket] = temp;
 }
 
 item* getIndex(hashtable *ht, char* key){
-	return ht->item[hashBern(key, ht)];
+	return ht->item[hashBern(ht, key)];
 }
 
 /**
@@ -76,19 +76,20 @@ void del(hashtable *ht, char *key){
 	while(current != NULL){
 		if(strcmp(key, current->key) == 0){
 			if(prev == NULL){
-				ht->item[hashBern(key, ht)] = current->next;
+				ht->item[hashBern(ht, key)] = current->next;
 			}
 			else{
 				prev->next = current->next;
 			}
 			
 			free(current);
-			break;
+			return;
 		}
 		prev = current;
 		current = current->next;
 		
 	}
+	printf("key \"%s\" was not found.\n", key);
 }
 
 void destroyHash(hashtable *ht){
@@ -108,7 +109,7 @@ void destroyHash(hashtable *ht){
 
 void printTable(hashtable *ht){
 	if(ht->size == 0){
-		printf("Hashtable must have a size greater than zero.");
+		printf("Hashtable must have a size greater than zero.\n");
 		return;
 	}
 	
@@ -149,7 +150,7 @@ int main(int argc, char* argv[]){
 	insert(&ht, "Mark", 1);
 
 	printTable(&ht);	
-	del(&ht, "Lisa");
+	del(&ht, "lisa");
 	printTable(&ht);	
 
 	destroyHash(&ht);
